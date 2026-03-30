@@ -20,7 +20,7 @@ export class PaymentsService {
       monthly: this.config.get<string>('STRIPE_PRICE_MONTHLY')!,
       annual:  this.config.get<string>('STRIPE_PRICE_ANNUAL')!,
       single:  this.config.get<string>('STRIPE_PRICE_SINGLE')!,
-      test:    this.config.get<string>('STRIPE_PRICE_ONE_TEST')!,
+      // test:    this.config.get<string>('STRIPE_PRICE_ONE_TEST')!,
     };
     return map[plan];
   }

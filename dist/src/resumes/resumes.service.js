@@ -39,7 +39,13 @@ let ResumesService = class ResumesService {
             throw new common_1.ForbiddenException();
         return resume;
     }
-    create(userId, dto) {
+    async create(userId, dto) {
+        const template = await this.prisma.template.findUnique({ where: { id: dto.templateId } });
+        if (template?.isPremium) {
+            const user = await this.prisma.user.findUnique({ where: { id: userId } });
+            if (user?.plan !== 'pro')
+                throw new common_1.ForbiddenException('Este template é exclusivo para assinantes PRO.');
+        }
         return this.prisma.resume.create({
             data: {
                 title: dto.title ?? 'Meu Currículo',

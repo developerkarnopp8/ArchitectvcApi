@@ -13,6 +13,7 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const auth_module_1 = require("./auth/auth.module");
 const resumes_module_1 = require("./resumes/resumes.module");
 const templates_module_1 = require("./templates/templates.module");
+const payments_module_1 = require("./payments/payments.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,6 +25,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             resumes_module_1.ResumesModule,
             templates_module_1.TemplatesModule,
+            payments_module_1.PaymentsModule,
         ],
     })
 ], AppModule);

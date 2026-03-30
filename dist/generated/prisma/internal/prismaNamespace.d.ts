@@ -435,6 +435,8 @@ export declare const UserScalarFieldEnum: {
     readonly email: "email";
     readonly password: "password";
     readonly plan: "plan";
+    readonly stripeCustomerId: "stripeCustomerId";
+    readonly stripeSubscriptionId: "stripeSubscriptionId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -473,6 +475,11 @@ export declare const QueryMode: {
     readonly insensitive: "insensitive";
 };
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode];
+export declare const NullsOrder: {
+    readonly first: "first";
+    readonly last: "last";
+};
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
 export declare const JsonNullValueFilter: {
     readonly DbNull: runtime.DbNullClass;
     readonly JsonNull: runtime.JsonNullClass;

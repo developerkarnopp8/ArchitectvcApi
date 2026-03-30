@@ -7,9 +7,9 @@ export declare class AuthController {
     constructor(auth: AuthService);
     register(dto: RegisterDto): Promise<{
         user: {
-            id: string;
             name: string;
             email: string;
+            id: string;
             plan: string;
             createdAt: Date;
         };
@@ -17,11 +17,11 @@ export declare class AuthController {
     }>;
     login(dto: LoginDto): Promise<{
         user: {
-            id: string;
             name: string;
             email: string;
-            plan: string;
+            id: string;
             stripeCustomerId: string | null;
+            plan: string;
             stripeSubscriptionId: string | null;
             createdAt: Date;
             updatedAt: Date;

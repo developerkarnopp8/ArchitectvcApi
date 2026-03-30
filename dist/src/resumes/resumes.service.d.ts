@@ -16,9 +16,9 @@ export declare class ResumesService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        data: import("@prisma/client/runtime/client").JsonValue;
         title: string;
         templateId: string;
-        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
         userId: string;
     }>;
@@ -26,9 +26,9 @@ export declare class ResumesService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        data: import("@prisma/client/runtime/client").JsonValue;
         title: string;
         templateId: string;
-        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
         userId: string;
     }>;
@@ -36,9 +36,9 @@ export declare class ResumesService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        data: import("@prisma/client/runtime/client").JsonValue;
         title: string;
         templateId: string;
-        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
         userId: string;
     }>;

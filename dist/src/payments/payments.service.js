@@ -31,6 +31,7 @@ let PaymentsService = class PaymentsService {
             monthly: this.config.get('STRIPE_PRICE_MONTHLY'),
             annual: this.config.get('STRIPE_PRICE_ANNUAL'),
             single: this.config.get('STRIPE_PRICE_SINGLE'),
+            test: this.config.get('STRIPE_PRICE_ONE_TEST'),
         };
         return map[plan];
     }
@@ -41,7 +42,7 @@ let PaymentsService = class PaymentsService {
         if (user.plan === 'pro')
             throw new common_1.BadRequestException('Você já é PRO.');
         const priceId = this.getPriceId(dto.plan);
-        const mode = dto.plan === 'single' ? 'payment' : 'subscription';
+        const mode = (dto.plan === 'single' || dto.plan === 'test') ? 'payment' : 'subscription';
         let customerId = user.stripeCustomerId ?? undefined;
         if (!customerId) {
             const customer = await this.stripe.customers.create({
@@ -121,12 +122,21 @@ let PaymentsService = class PaymentsService {
             },
             {
                 id: 'single',
-                name: 'Vitalício',
-                price: 299.00,
+                name: 'Pagamento Único',
+                price: 2.00,
                 currency: 'BRL',
                 interval: 'once',
-                description: 'Acesso vitalício a todos os templates',
+                description: 'Acesso completo a todos os templates com pagamento único',
                 badge: 'Melhor custo-benefício',
+            },
+            {
+                id: 'test',
+                name: 'Plano Teste',
+                price: 0.50,
+                currency: 'BRL',
+                interval: 'once',
+                description: 'Apenas para validação do fluxo de pagamento',
+                badge: 'Teste',
             },
         ];
     }

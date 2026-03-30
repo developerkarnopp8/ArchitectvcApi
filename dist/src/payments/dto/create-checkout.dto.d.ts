@@ -1,3 +1,3 @@
 export declare class CreateCheckoutDto {
-    plan: 'monthly' | 'annual' | 'single';
+    plan: 'monthly' | 'annual' | 'single' | 'test';
 }

@@ -29,8 +29,8 @@ let PaymentsController = class PaymentsController {
         const frontendUrl = process.env['FRONTEND_URL'] ?? 'http://localhost:4200';
         return this.paymentsService.createCheckoutSession(req.user.id, dto, frontendUrl);
     }
-    async webhook(sig, req) {
-        return this.paymentsService.handleWebhook(req.rawBody, sig);
+    async webhook(body, sig, requestId) {
+        return this.paymentsService.handleWebhook(body, sig, requestId);
     }
 };
 exports.PaymentsController = PaymentsController;
@@ -51,10 +51,11 @@ __decorate([
 ], PaymentsController.prototype, "createCheckout", null);
 __decorate([
     (0, common_1.Post)('webhook'),
-    __param(0, (0, common_1.Headers)('stripe-signature')),
-    __param(1, (0, common_1.Req)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('x-signature')),
+    __param(2, (0, common_1.Headers)('x-request-id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", Promise)
 ], PaymentsController.prototype, "webhook", null);
 exports.PaymentsController = PaymentsController = __decorate([

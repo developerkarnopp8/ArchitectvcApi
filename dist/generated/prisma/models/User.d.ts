@@ -12,8 +12,7 @@ export type UserMinAggregateOutputType = {
     email: string | null;
     password: string | null;
     plan: string | null;
-    stripeCustomerId: string | null;
-    stripeSubscriptionId: string | null;
+    mpPaymentId: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -23,8 +22,7 @@ export type UserMaxAggregateOutputType = {
     email: string | null;
     password: string | null;
     plan: string | null;
-    stripeCustomerId: string | null;
-    stripeSubscriptionId: string | null;
+    mpPaymentId: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -34,8 +32,7 @@ export type UserCountAggregateOutputType = {
     email: number;
     password: number;
     plan: number;
-    stripeCustomerId: number;
-    stripeSubscriptionId: number;
+    mpPaymentId: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
@@ -46,8 +43,7 @@ export type UserMinAggregateInputType = {
     email?: true;
     password?: true;
     plan?: true;
-    stripeCustomerId?: true;
-    stripeSubscriptionId?: true;
+    mpPaymentId?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -57,8 +53,7 @@ export type UserMaxAggregateInputType = {
     email?: true;
     password?: true;
     plan?: true;
-    stripeCustomerId?: true;
-    stripeSubscriptionId?: true;
+    mpPaymentId?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -68,8 +63,7 @@ export type UserCountAggregateInputType = {
     email?: true;
     password?: true;
     plan?: true;
-    stripeCustomerId?: true;
-    stripeSubscriptionId?: true;
+    mpPaymentId?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -104,8 +98,7 @@ export type UserGroupByOutputType = {
     email: string;
     password: string;
     plan: string;
-    stripeCustomerId: string | null;
-    stripeSubscriptionId: string | null;
+    mpPaymentId: string | null;
     createdAt: Date;
     updatedAt: Date;
     _count: UserCountAggregateOutputType | null;
@@ -124,8 +117,7 @@ export type UserWhereInput = {
     email?: Prisma.StringFilter<"User"> | string;
     password?: Prisma.StringFilter<"User"> | string;
     plan?: Prisma.StringFilter<"User"> | string;
-    stripeCustomerId?: Prisma.StringNullableFilter<"User"> | string | null;
-    stripeSubscriptionId?: Prisma.StringNullableFilter<"User"> | string | null;
+    mpPaymentId?: Prisma.StringNullableFilter<"User"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     resumes?: Prisma.ResumeListRelationFilter;
@@ -136,8 +128,7 @@ export type UserOrderByWithRelationInput = {
     email?: Prisma.SortOrder;
     password?: Prisma.SortOrder;
     plan?: Prisma.SortOrder;
-    stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder;
-    stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    mpPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     resumes?: Prisma.ResumeOrderByRelationAggregateInput;
@@ -145,26 +136,24 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
     email?: string;
-    stripeCustomerId?: string;
     AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
     OR?: Prisma.UserWhereInput[];
     NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
     name?: Prisma.StringFilter<"User"> | string;
     password?: Prisma.StringFilter<"User"> | string;
     plan?: Prisma.StringFilter<"User"> | string;
-    stripeSubscriptionId?: Prisma.StringNullableFilter<"User"> | string | null;
+    mpPaymentId?: Prisma.StringNullableFilter<"User"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     resumes?: Prisma.ResumeListRelationFilter;
-}, "id" | "email" | "stripeCustomerId">;
+}, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     email?: Prisma.SortOrder;
     password?: Prisma.SortOrder;
     plan?: Prisma.SortOrder;
-    stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder;
-    stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    mpPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.UserCountOrderByAggregateInput;
@@ -180,8 +169,7 @@ export type UserScalarWhereWithAggregatesInput = {
     email?: Prisma.StringWithAggregatesFilter<"User"> | string;
     password?: Prisma.StringWithAggregatesFilter<"User"> | string;
     plan?: Prisma.StringWithAggregatesFilter<"User"> | string;
-    stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
-    stripeSubscriptionId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
+    mpPaymentId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string;
 };
@@ -191,8 +179,7 @@ export type UserCreateInput = {
     email: string;
     password: string;
     plan?: string;
-    stripeCustomerId?: string | null;
-    stripeSubscriptionId?: string | null;
+    mpPaymentId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput;
@@ -203,8 +190,7 @@ export type UserUncheckedCreateInput = {
     email: string;
     password: string;
     plan?: string;
-    stripeCustomerId?: string | null;
-    stripeSubscriptionId?: string | null;
+    mpPaymentId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput;
@@ -215,8 +201,7 @@ export type UserUpdateInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput;
@@ -227,8 +212,7 @@ export type UserUncheckedUpdateInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput;
@@ -239,8 +223,7 @@ export type UserCreateManyInput = {
     email: string;
     password: string;
     plan?: string;
-    stripeCustomerId?: string | null;
-    stripeSubscriptionId?: string | null;
+    mpPaymentId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -250,8 +233,7 @@ export type UserUpdateManyMutationInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -261,8 +243,7 @@ export type UserUncheckedUpdateManyInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -272,8 +253,7 @@ export type UserCountOrderByAggregateInput = {
     email?: Prisma.SortOrder;
     password?: Prisma.SortOrder;
     plan?: Prisma.SortOrder;
-    stripeCustomerId?: Prisma.SortOrder;
-    stripeSubscriptionId?: Prisma.SortOrder;
+    mpPaymentId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -283,8 +263,7 @@ export type UserMaxOrderByAggregateInput = {
     email?: Prisma.SortOrder;
     password?: Prisma.SortOrder;
     plan?: Prisma.SortOrder;
-    stripeCustomerId?: Prisma.SortOrder;
-    stripeSubscriptionId?: Prisma.SortOrder;
+    mpPaymentId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -294,8 +273,7 @@ export type UserMinOrderByAggregateInput = {
     email?: Prisma.SortOrder;
     password?: Prisma.SortOrder;
     plan?: Prisma.SortOrder;
-    stripeCustomerId?: Prisma.SortOrder;
-    stripeSubscriptionId?: Prisma.SortOrder;
+    mpPaymentId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -330,8 +308,7 @@ export type UserCreateWithoutResumesInput = {
     email: string;
     password: string;
     plan?: string;
-    stripeCustomerId?: string | null;
-    stripeSubscriptionId?: string | null;
+    mpPaymentId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -341,8 +318,7 @@ export type UserUncheckedCreateWithoutResumesInput = {
     email: string;
     password: string;
     plan?: string;
-    stripeCustomerId?: string | null;
-    stripeSubscriptionId?: string | null;
+    mpPaymentId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -365,8 +341,7 @@ export type UserUpdateWithoutResumesInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -376,8 +351,7 @@ export type UserUncheckedUpdateWithoutResumesInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     plan?: Prisma.StringFieldUpdateOperationsInput | string;
-    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -399,8 +373,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     email?: boolean;
     password?: boolean;
     plan?: boolean;
-    stripeCustomerId?: boolean;
-    stripeSubscriptionId?: boolean;
+    mpPaymentId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>;
@@ -412,8 +385,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     email?: boolean;
     password?: boolean;
     plan?: boolean;
-    stripeCustomerId?: boolean;
-    stripeSubscriptionId?: boolean;
+    mpPaymentId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["user"]>;
@@ -423,8 +395,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     email?: boolean;
     password?: boolean;
     plan?: boolean;
-    stripeCustomerId?: boolean;
-    stripeSubscriptionId?: boolean;
+    mpPaymentId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["user"]>;
@@ -434,12 +405,11 @@ export type UserSelectScalar = {
     email?: boolean;
     password?: boolean;
     plan?: boolean;
-    stripeCustomerId?: boolean;
-    stripeSubscriptionId?: boolean;
+    mpPaymentId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "plan" | "stripeCustomerId" | "stripeSubscriptionId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "plan" | "mpPaymentId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
@@ -457,8 +427,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         email: string;
         password: string;
         plan: string;
-        stripeCustomerId: string | null;
-        stripeSubscriptionId: string | null;
+        mpPaymentId: string | null;
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["user"]>;
@@ -524,8 +493,7 @@ export interface UserFieldRefs {
     readonly email: Prisma.FieldRef<"User", 'String'>;
     readonly password: Prisma.FieldRef<"User", 'String'>;
     readonly plan: Prisma.FieldRef<"User", 'String'>;
-    readonly stripeCustomerId: Prisma.FieldRef<"User", 'String'>;
-    readonly stripeSubscriptionId: Prisma.FieldRef<"User", 'String'>;
+    readonly mpPaymentId: Prisma.FieldRef<"User", 'String'>;
     readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>;
 }

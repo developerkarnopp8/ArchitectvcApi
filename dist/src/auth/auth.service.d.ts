@@ -21,9 +21,8 @@ export declare class AuthService {
             name: string;
             email: string;
             id: string;
-            stripeCustomerId: string | null;
             plan: string;
-            stripeSubscriptionId: string | null;
+            mpPaymentId: string | null;
             createdAt: Date;
             updatedAt: Date;
         };

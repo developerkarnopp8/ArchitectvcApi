@@ -16,7 +16,7 @@ class CreateCheckoutDto {
 }
 exports.CreateCheckoutDto = CreateCheckoutDto;
 __decorate([
-    (0, class_validator_1.IsIn)(['monthly', 'annual', 'single', 'test']),
+    (0, class_validator_1.IsIn)(['monthly', 'annual', 'single']),
     __metadata("design:type", String)
 ], CreateCheckoutDto.prototype, "plan", void 0);
 //# sourceMappingURL=create-checkout.dto.js.map

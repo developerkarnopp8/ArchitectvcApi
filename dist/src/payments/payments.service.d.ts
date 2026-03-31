@@ -4,13 +4,13 @@ import { CreateCheckoutDto } from './dto/create-checkout.dto';
 export declare class PaymentsService {
     private prisma;
     private config;
-    private stripe;
+    private mp;
     constructor(prisma: PrismaService, config: ConfigService);
-    private getPriceId;
+    private getPlanDetails;
     createCheckoutSession(userId: string, dto: CreateCheckoutDto, frontendUrl: string): Promise<{
-        url: string | null;
+        url: string | undefined;
     }>;
-    handleWebhook(rawBody: Buffer, signature: string): Promise<{
+    handleWebhook(body: any, xSignature: string, xRequestId: string): Promise<{
         received: boolean;
     }>;
     getPlans(): Promise<({

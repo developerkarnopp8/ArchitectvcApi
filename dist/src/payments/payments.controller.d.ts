@@ -1,4 +1,3 @@
-import { RawBodyRequest } from '@nestjs/common';
 import { Request } from 'express';
 import { PaymentsService } from './payments.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
@@ -27,9 +26,9 @@ export declare class PaymentsController {
             id: string;
         };
     }): Promise<{
-        url: string | null;
+        url: string | undefined;
     }>;
-    webhook(sig: string, req: RawBodyRequest<Request>): Promise<{
+    webhook(body: any, sig: string, requestId: string): Promise<{
         received: boolean;
     }>;
 }

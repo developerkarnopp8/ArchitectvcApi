@@ -61,8 +61,7 @@ exports.UserScalarFieldEnum = {
     email: 'email',
     password: 'password',
     plan: 'plan',
-    stripeCustomerId: 'stripeCustomerId',
-    stripeSubscriptionId: 'stripeSubscriptionId',
+    mpPaymentId: 'mpPaymentId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };

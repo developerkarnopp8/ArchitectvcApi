@@ -1,28 +1,30 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe';
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
+import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 
 @Injectable()
 export class PaymentsService {
-  private stripe: Stripe;
+  private mp: MercadoPagoConfig;
 
   constructor(
     private prisma: PrismaService,
     private config: ConfigService,
   ) {
-    this.stripe = new Stripe(this.config.get<string>('STRIPE_SECRET_KEY')!);
+    this.mp = new MercadoPagoConfig({
+      accessToken: this.config.get<string>('MP_ACCESS_TOKEN')!,
+    });
   }
 
-  private getPriceId(plan: CreateCheckoutDto['plan']): string {
-    const map: Record<string, string> = {
-      monthly: this.config.get<string>('STRIPE_PRICE_MONTHLY')!,
-      annual:  this.config.get<string>('STRIPE_PRICE_ANNUAL')!,
-      single:  this.config.get<string>('STRIPE_PRICE_SINGLE')!,
-      // test:    this.config.get<string>('STRIPE_PRICE_ONE_TEST')!,
+  private getPlanDetails(plan: string): { title: string; price: number } {
+    const plans: Record<string, { title: string; price: number }> = {
+      monthly: { title: 'Plano Mensal',       price: 19.90  },
+      annual:  { title: 'Plano Anual',        price: 119.00 },
+      single:  { title: 'Pagamento Único',    price: 2.00   },
     };
-    return map[plan];
+    return plans[plan];
   }
 
   async createCheckoutSession(userId: string, dto: CreateCheckoutDto, frontendUrl: string) {
@@ -30,68 +32,66 @@ export class PaymentsService {
     if (!user) throw new BadRequestException('Usuário não encontrado.');
     if (user.plan === 'pro') throw new BadRequestException('Você já é PRO.');
 
-    const priceId = this.getPriceId(dto.plan);
-    const mode = (dto.plan === 'single' || dto.plan === 'test') ? 'payment' : 'subscription';
+    const planDetails = this.getPlanDetails(dto.plan);
+    if (!planDetails) throw new BadRequestException('Plano inválido.');
 
-    let customerId = user.stripeCustomerId ?? undefined;
-    if (!customerId) {
-      const customer = await this.stripe.customers.create({
-        email: user.email,
-        name: user.name,
-        metadata: { userId: user.id },
-      });
-      customerId = customer.id;
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { stripeCustomerId: customerId },
-      });
-    }
+    const backendUrl  = this.config.get<string>('BACKEND_URL')!;
+    const isLocalhost = frontendUrl.includes('localhost');
 
-    const session = await this.stripe.checkout.sessions.create({
-      customer: customerId,
-      mode,
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${frontendUrl}/templates?canceled=true`,
-      metadata: { userId },
+    const preference = new Preference(this.mp);
+    const response = await preference.create({
+      body: {
+        items: [{
+          id:          dto.plan,
+          title:       planDetails.title,
+          quantity:    1,
+          unit_price:  planDetails.price,
+          currency_id: 'BRL',
+        }],
+        payer: { email: user.email, name: user.name },
+        back_urls: {
+          success: `${frontendUrl}/success`,
+          failure: `${frontendUrl}/templates?canceled=true`,
+          pending: `${frontendUrl}/success?pending=true`,
+        },
+        ...(isLocalhost ? {} : { auto_return: 'approved' }),
+        notification_url: `${backendUrl}/api/v1/payments/webhook`,
+        metadata: { user_id: userId, plan: dto.plan },
+      },
     });
 
-    return { url: session.url };
+    const isSandbox = this.config.get<string>('MP_ACCESS_TOKEN')!.startsWith('TEST-');
+    const url = isSandbox ? response.sandbox_init_point : response.init_point;
+    return { url };
   }
 
-  async handleWebhook(rawBody: Buffer, signature: string) {
-    const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET')!;
-    let event: Stripe.Event;
+  async handleWebhook(body: any, xSignature: string, xRequestId: string) {
+    const secret = this.config.get<string>('MP_WEBHOOK_SECRET');
 
-    try {
-      event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-    } catch {
-      throw new BadRequestException('Webhook inválido.');
+    // Valida assinatura se o secret estiver configurado
+    if (secret && body?.data?.id && xSignature) {
+      const ts = xSignature.match(/ts=([^,]+)/)?.[1];
+      const v1 = xSignature.match(/v1=([^,]+)/)?.[1];
+
+      if (ts && v1) {
+        const message = `id:${body.data.id};request-id:${xRequestId};ts:${ts};`;
+        const hash = crypto.createHmac('sha256', secret).update(message).digest('hex');
+        if (hash !== v1) throw new BadRequestException('Webhook inválido.');
+      }
     }
 
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
-        if (!userId) break;
+    if (body?.type === 'payment' && body?.data?.id) {
+      const paymentClient = new Payment(this.mp);
+      const payment = await paymentClient.get({ id: body.data.id });
 
-        await this.prisma.user.update({
-          where: { id: userId },
-          data: {
-            plan: 'pro',
-            stripeSubscriptionId: session.subscription as string ?? null,
-          },
-        });
-        break;
-      }
-
-      case 'customer.subscription.deleted': {
-        const sub = event.data.object as Stripe.Subscription;
-        await this.prisma.user.updateMany({
-          where: { stripeSubscriptionId: sub.id },
-          data: { plan: 'free', stripeSubscriptionId: null },
-        });
-        break;
+      if (payment.status === 'approved') {
+        const meta = payment.metadata as { user_id?: string; plan?: string } | null;
+        if (meta?.user_id) {
+          await this.prisma.user.update({
+            where: { id: meta.user_id },
+            data: { plan: 'pro', mpPaymentId: String(payment.id) },
+          });
+        }
       }
     }
 
@@ -125,15 +125,6 @@ export class PaymentsService {
         interval: 'once',
         description: 'Acesso completo a todos os templates com pagamento único',
         badge: 'Melhor custo-benefício',
-      },
-      {
-        id: 'test',
-        name: 'Plano Teste',
-        price: 0.50,
-        currency: 'BRL',
-        interval: 'once',
-        description: 'Apenas para validação do fluxo de pagamento',
-        badge: 'Teste',
       },
     ];
   }

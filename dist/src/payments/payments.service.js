@@ -31,7 +31,6 @@ let PaymentsService = class PaymentsService {
             monthly: this.config.get('STRIPE_PRICE_MONTHLY'),
             annual: this.config.get('STRIPE_PRICE_ANNUAL'),
             single: this.config.get('STRIPE_PRICE_SINGLE'),
-            // test: this.config.get('STRIPE_PRICE_ONE_TEST'),
         };
         return map[plan];
     }

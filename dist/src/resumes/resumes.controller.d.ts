@@ -25,31 +25,31 @@ export declare class ResumesController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
+        userId: string;
         title: string;
         templateId: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
-        userId: string;
     }>;
     create(dto: CreateResumeDto, req: AuthRequest): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
+        userId: string;
         title: string;
         templateId: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
-        userId: string;
     }>;
     update(id: string, dto: UpdateResumeDto, req: AuthRequest): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
+        userId: string;
         title: string;
         templateId: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
         status: string;
-        userId: string;
     }>;
     remove(id: string, req: AuthRequest): Promise<{
         message: string;

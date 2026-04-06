@@ -7,11 +7,19 @@ async function bootstrap() {
 
   // CORS — permite chamadas do Angular (dev + prod)
   app.enableCors({
-    origin: [
-      'http://localhost:4200',
-      'http://localhost:4201',
-      process.env.FRONTEND_URL,
-    ].filter(Boolean) as string[],
+    origin: (origin, callback) => {
+      const allowed = [
+        'http://localhost:4200',
+        'http://localhost:4201',
+        process.env.FRONTEND_URL,
+      ].filter(Boolean) as string[];
+      // Permite qualquer porta localhost em dev
+      if (!origin || allowed.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 

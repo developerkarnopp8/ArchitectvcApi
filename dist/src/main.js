@@ -6,11 +6,19 @@ const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, { rawBody: true });
     app.enableCors({
-        origin: [
-            'http://localhost:4200',
-            'http://localhost:4201',
-            process.env.FRONTEND_URL,
-        ].filter(Boolean),
+        origin: (origin, callback) => {
+            const allowed = [
+                'http://localhost:4200',
+                'http://localhost:4201',
+                process.env.FRONTEND_URL,
+            ].filter(Boolean);
+            if (!origin || allowed.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+                callback(null, true);
+            }
+            else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({

@@ -29,6 +29,15 @@ let PaymentsController = class PaymentsController {
         const frontendUrl = process.env['FRONTEND_URL'] ?? 'http://localhost:4200';
         return this.paymentsService.createCheckoutSession(req.user.id, dto, frontendUrl);
     }
+    confirmSession(sessionId, req) {
+        return this.paymentsService.confirmSession(req.user.id, sessionId);
+    }
+    getUnlockedTemplates(req) {
+        return this.paymentsService.getUnlockedTemplates(req.user.id);
+    }
+    consumeUnlock(templateId, req) {
+        return this.paymentsService.consumeUnlock(req.user.id, templateId);
+    }
     async webhook(sig, req) {
         return this.paymentsService.handleWebhook(req.rawBody, sig);
     }
@@ -49,6 +58,32 @@ __decorate([
     __metadata("design:paramtypes", [create_checkout_dto_1.CreateCheckoutDto, Object]),
     __metadata("design:returntype", void 0)
 ], PaymentsController.prototype, "createCheckout", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('confirm-session'),
+    __param(0, (0, common_1.Body)('sessionId')),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], PaymentsController.prototype, "confirmSession", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('unlocked-templates'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], PaymentsController.prototype, "getUnlockedTemplates", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('consume-unlock'),
+    __param(0, (0, common_1.Body)('templateId')),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], PaymentsController.prototype, "consumeUnlock", null);
 __decorate([
     (0, common_1.Post)('webhook'),
     __param(0, (0, common_1.Headers)('stripe-signature')),

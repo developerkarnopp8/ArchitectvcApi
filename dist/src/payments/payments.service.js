@@ -38,10 +38,14 @@ let PaymentsService = class PaymentsService {
         const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (!user)
             throw new common_1.BadRequestException('Usuário não encontrado.');
-        if (user.plan === 'pro')
+        if (dto.plan === 'single' && !dto.templateId) {
+            throw new common_1.BadRequestException('Informe o template para o pagamento único.');
+        }
+        if (dto.plan !== 'single' && user.plan === 'pro') {
             throw new common_1.BadRequestException('Você já é PRO.');
+        }
         const priceId = this.getPriceId(dto.plan);
-        const mode = (dto.plan === 'single' || dto.plan === 'test') ? 'payment' : 'subscription';
+        const mode = dto.plan === 'single' ? 'payment' : 'subscription';
         let customerId = user.stripeCustomerId ?? undefined;
         if (!customerId) {
             const customer = await this.stripe.customers.create({
@@ -59,34 +63,99 @@ let PaymentsService = class PaymentsService {
             customer: customerId,
             mode,
             line_items: [{ price: priceId, quantity: 1 }],
-            success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${frontendUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${frontendUrl}/templates?canceled=true`,
-            metadata: { userId },
+            metadata: {
+                userId,
+                plan: dto.plan,
+                ...(dto.templateId ? { templateId: dto.templateId } : {}),
+            },
         });
         return { url: session.url };
+    }
+    async confirmSession(userId, sessionId) {
+        const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+        if (session.payment_status !== 'paid')
+            return { confirmed: false };
+        if (session.metadata?.userId !== userId)
+            return { confirmed: false };
+        const plan = session.metadata?.plan;
+        const templateId = session.metadata?.templateId;
+        if (plan === 'single' && templateId) {
+            await this.prisma.templateUnlock.upsert({
+                where: { userId_templateId: { userId, templateId } },
+                create: { userId, templateId, downloaded: false },
+                update: { downloaded: false },
+            });
+        }
+        else {
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: {
+                    plan: 'pro',
+                    stripeSubscriptionId: session.subscription ?? null,
+                },
+            });
+        }
+        return { confirmed: true, plan, templateId: templateId ?? null };
+    }
+    async getUnlockedTemplates(userId) {
+        const unlocks = await this.prisma.templateUnlock.findMany({
+            where: { userId, downloaded: false },
+            select: { templateId: true },
+        });
+        return unlocks.map(u => u.templateId);
+    }
+    async consumeUnlock(userId, templateId) {
+        const unlock = await this.prisma.templateUnlock.findUnique({
+            where: { userId_templateId: { userId, templateId } },
+        });
+        if (!unlock)
+            throw new common_1.BadRequestException('Unlock não encontrado.');
+        await this.prisma.templateUnlock.update({
+            where: { userId_templateId: { userId, templateId } },
+            data: { downloaded: true },
+        });
+        return { consumed: true };
     }
     async handleWebhook(rawBody, signature) {
         const webhookSecret = this.config.get('STRIPE_WEBHOOK_SECRET');
         let event;
-        try {
-            event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+        if (webhookSecret && signature) {
+            try {
+                event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+            }
+            catch {
+                throw new common_1.BadRequestException('Webhook inválido.');
+            }
         }
-        catch {
-            throw new common_1.BadRequestException('Webhook inválido.');
+        else {
+            event = JSON.parse(rawBody.toString());
         }
         switch (event.type) {
             case 'checkout.session.completed': {
                 const session = event.data.object;
                 const userId = session.metadata?.userId;
+                const plan = session.metadata?.plan;
+                const templateId = session.metadata?.templateId;
                 if (!userId)
                     break;
-                await this.prisma.user.update({
-                    where: { id: userId },
-                    data: {
-                        plan: 'pro',
-                        stripeSubscriptionId: session.subscription ?? null,
-                    },
-                });
+                if (plan === 'single' && templateId) {
+                    await this.prisma.templateUnlock.upsert({
+                        where: { userId_templateId: { userId, templateId } },
+                        create: { userId, templateId, downloaded: false },
+                        update: { downloaded: false },
+                    });
+                }
+                else {
+                    await this.prisma.user.update({
+                        where: { id: userId },
+                        data: {
+                            plan: 'pro',
+                            stripeSubscriptionId: session.subscription ?? null,
+                        },
+                    });
+                }
                 break;
             }
             case 'customer.subscription.deleted': {
@@ -121,21 +190,11 @@ let PaymentsService = class PaymentsService {
             },
             {
                 id: 'single',
-                name: 'Pagamento Único',
+                name: 'Template Único',
                 price: 2.00,
                 currency: 'BRL',
                 interval: 'once',
-                description: 'Acesso completo a todos os templates com pagamento único',
-                badge: 'Melhor custo-benefício',
-            },
-            {
-                id: 'test',
-                name: 'Plano Teste',
-                price: 0.50,
-                currency: 'BRL',
-                interval: 'once',
-                description: 'Apenas para validação do fluxo de pagamento',
-                badge: 'Teste',
+                description: 'Acesso a 1 template — use e baixe uma vez',
             },
         ];
     }

@@ -158,6 +158,7 @@ export type FieldRef<Model, FieldType> = runtime.FieldRef<Model, FieldType>;
 type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>;
 export declare const ModelName: {
     readonly User: "User";
+    readonly TemplateUnlock: "TemplateUnlock";
     readonly Resume: "Resume";
     readonly Template: "Template";
 };
@@ -172,7 +173,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "resume" | "template";
+        modelProps: "user" | "templateUnlock" | "resume" | "template";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -247,6 +248,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.UserCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number;
+                };
+            };
+        };
+        TemplateUnlock: {
+            payload: Prisma.$TemplateUnlockPayload<ExtArgs>;
+            fields: Prisma.TemplateUnlockFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.TemplateUnlockFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.TemplateUnlockFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                findFirst: {
+                    args: Prisma.TemplateUnlockFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.TemplateUnlockFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                findMany: {
+                    args: Prisma.TemplateUnlockFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>[];
+                };
+                create: {
+                    args: Prisma.TemplateUnlockCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                createMany: {
+                    args: Prisma.TemplateUnlockCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.TemplateUnlockCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>[];
+                };
+                delete: {
+                    args: Prisma.TemplateUnlockDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                update: {
+                    args: Prisma.TemplateUnlockUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.TemplateUnlockDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.TemplateUnlockUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.TemplateUnlockUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>[];
+                };
+                upsert: {
+                    args: Prisma.TemplateUnlockUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TemplateUnlockPayload>;
+                };
+                aggregate: {
+                    args: Prisma.TemplateUnlockAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTemplateUnlock>;
+                };
+                groupBy: {
+                    args: Prisma.TemplateUnlockGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TemplateUnlockGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.TemplateUnlockCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TemplateUnlockCountAggregateOutputType> | number;
                 };
             };
         };
@@ -441,6 +516,14 @@ export declare const UserScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export declare const TemplateUnlockScalarFieldEnum: {
+    readonly id: "id";
+    readonly templateId: "templateId";
+    readonly downloaded: "downloaded";
+    readonly createdAt: "createdAt";
+    readonly userId: "userId";
+};
+export type TemplateUnlockScalarFieldEnum = (typeof TemplateUnlockScalarFieldEnum)[keyof typeof TemplateUnlockScalarFieldEnum];
 export declare const ResumeScalarFieldEnum: {
     readonly id: "id";
     readonly title: "title";
@@ -490,9 +573,9 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>;
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>;
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
 export type BatchPayload = {
@@ -520,6 +603,7 @@ export type PrismaClientOptions = ({
 };
 export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
+    templateUnlock?: Prisma.TemplateUnlockOmit;
     resume?: Prisma.ResumeOmit;
     template?: Prisma.TemplateOmit;
 };

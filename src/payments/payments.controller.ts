@@ -26,6 +26,30 @@ export class PaymentsController {
     return this.paymentsService.createCheckoutSession(req.user.id, dto, frontendUrl);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('confirm-session')
+  confirmSession(
+    @Body('sessionId') sessionId: string,
+    @Req() req: Request & { user: { id: string } },
+  ) {
+    return this.paymentsService.confirmSession(req.user.id, sessionId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('unlocked-templates')
+  getUnlockedTemplates(@Req() req: Request & { user: { id: string } }) {
+    return this.paymentsService.getUnlockedTemplates(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('consume-unlock')
+  consumeUnlock(
+    @Body('templateId') templateId: string,
+    @Req() req: Request & { user: { id: string } },
+  ) {
+    return this.paymentsService.consumeUnlock(req.user.id, templateId);
+  }
+
   @Post('webhook')
   async webhook(
     @Headers('stripe-signature') sig: string,

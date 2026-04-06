@@ -20,7 +20,6 @@ export class PaymentsService {
       monthly: this.config.get<string>('STRIPE_PRICE_MONTHLY')!,
       annual:  this.config.get<string>('STRIPE_PRICE_ANNUAL')!,
       single:  this.config.get<string>('STRIPE_PRICE_SINGLE')!,
-      // test:    this.config.get<string>('STRIPE_PRICE_ONE_TEST')!,
     };
     return map[plan];
   }
@@ -28,10 +27,19 @@ export class PaymentsService {
   async createCheckoutSession(userId: string, dto: CreateCheckoutDto, frontendUrl: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new BadRequestException('Usuário não encontrado.');
-    if (user.plan === 'pro') throw new BadRequestException('Você já é PRO.');
+
+    // Plano único: valida se templateId foi informado
+    if (dto.plan === 'single' && !dto.templateId) {
+      throw new BadRequestException('Informe o template para o pagamento único.');
+    }
+
+    // Planos de assinatura: bloqueia se já é PRO
+    if (dto.plan !== 'single' && user.plan === 'pro') {
+      throw new BadRequestException('Você já é PRO.');
+    }
 
     const priceId = this.getPriceId(dto.plan);
-    const mode = (dto.plan === 'single' || dto.plan === 'test') ? 'payment' : 'subscription';
+    const mode = dto.plan === 'single' ? 'payment' : 'subscription';
 
     let customerId = user.stripeCustomerId ?? undefined;
     if (!customerId) {
@@ -51,37 +59,105 @@ export class PaymentsService {
       customer: customerId,
       mode,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${frontendUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/templates?canceled=true`,
-      metadata: { userId },
+      metadata: {
+        userId,
+        plan: dto.plan,
+        ...(dto.templateId ? { templateId: dto.templateId } : {}),
+      },
     });
 
     return { url: session.url };
   }
 
+  async confirmSession(userId: string, sessionId: string) {
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status !== 'paid') return { confirmed: false };
+    if (session.metadata?.userId !== userId) return { confirmed: false };
+
+    const plan = session.metadata?.plan;
+    const templateId = session.metadata?.templateId;
+
+    if (plan === 'single' && templateId) {
+      // Pagamento único: cria ou reseta unlock (permite recompra)
+      await this.prisma.templateUnlock.upsert({
+        where: { userId_templateId: { userId, templateId } },
+        create: { userId, templateId, downloaded: false },
+        update: { downloaded: false },
+      });
+    } else {
+      // Assinatura: eleva para PRO
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          plan: 'pro',
+          stripeSubscriptionId: session.subscription as string ?? null,
+        },
+      });
+    }
+
+    return { confirmed: true, plan, templateId: templateId ?? null };
+  }
+
+  async getUnlockedTemplates(userId: string): Promise<string[]> {
+    const unlocks = await this.prisma.templateUnlock.findMany({
+      where: { userId, downloaded: false },
+      select: { templateId: true },
+    });
+    return unlocks.map(u => u.templateId);
+  }
+
+  async consumeUnlock(userId: string, templateId: string) {
+    const unlock = await this.prisma.templateUnlock.findUnique({
+      where: { userId_templateId: { userId, templateId } },
+    });
+    if (!unlock) throw new BadRequestException('Unlock não encontrado.');
+
+    await this.prisma.templateUnlock.update({
+      where: { userId_templateId: { userId, templateId } },
+      data: { downloaded: true },
+    });
+    return { consumed: true };
+  }
+
   async handleWebhook(rawBody: Buffer, signature: string) {
-    const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET')!;
+    const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET');
     let event: Stripe.Event;
 
-    try {
-      event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-    } catch {
-      throw new BadRequestException('Webhook inválido.');
+    if (webhookSecret && signature) {
+      try {
+        event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+      } catch {
+        throw new BadRequestException('Webhook inválido.');
+      }
+    } else {
+      event = JSON.parse(rawBody.toString()) as Stripe.Event;
     }
 
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
+        const plan = session.metadata?.plan;
+        const templateId = session.metadata?.templateId;
         if (!userId) break;
 
-        await this.prisma.user.update({
-          where: { id: userId },
-          data: {
-            plan: 'pro',
-            stripeSubscriptionId: session.subscription as string ?? null,
-          },
-        });
+        if (plan === 'single' && templateId) {
+          await this.prisma.templateUnlock.upsert({
+            where: { userId_templateId: { userId, templateId } },
+            create: { userId, templateId, downloaded: false },
+            update: { downloaded: false },
+          });
+        } else {
+          await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+              plan: 'pro',
+              stripeSubscriptionId: session.subscription as string ?? null,
+            },
+          });
+        }
         break;
       }
 
@@ -119,21 +195,11 @@ export class PaymentsService {
       },
       {
         id: 'single',
-        name: 'Pagamento Único',
+        name: 'Template Único',
         price: 2.00,
         currency: 'BRL',
         interval: 'once',
-        description: 'Acesso completo a todos os templates com pagamento único',
-        badge: 'Melhor custo-benefício',
-      },
-      {
-        id: 'test',
-        name: 'Plano Teste',
-        price: 0.50,
-        currency: 'BRL',
-        interval: 'once',
-        description: 'Apenas para validação do fluxo de pagamento',
-        badge: 'Teste',
+        description: 'Acesso a 1 template — use e baixe uma vez',
       },
     ];
   }

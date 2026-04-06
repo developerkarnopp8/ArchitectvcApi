@@ -129,6 +129,7 @@ export type UserWhereInput = {
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     resumes?: Prisma.ResumeListRelationFilter;
+    templateUnlocks?: Prisma.TemplateUnlockListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -141,6 +142,7 @@ export type UserOrderByWithRelationInput = {
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     resumes?: Prisma.ResumeOrderByRelationAggregateInput;
+    templateUnlocks?: Prisma.TemplateUnlockOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -156,6 +158,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     resumes?: Prisma.ResumeListRelationFilter;
+    templateUnlocks?: Prisma.TemplateUnlockListRelationFilter;
 }, "id" | "email" | "stripeCustomerId">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -196,6 +199,7 @@ export type UserCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput;
+    templateUnlocks?: Prisma.TemplateUnlockCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateInput = {
     id?: string;
@@ -208,6 +212,7 @@ export type UserUncheckedCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput;
+    templateUnlocks?: Prisma.TemplateUnlockUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -220,6 +225,7 @@ export type UserUpdateInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput;
+    templateUnlocks?: Prisma.TemplateUnlockUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -232,6 +238,7 @@ export type UserUncheckedUpdateInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput;
+    templateUnlocks?: Prisma.TemplateUnlockUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateManyInput = {
     id?: string;
@@ -312,6 +319,18 @@ export type NullableStringFieldUpdateOperationsInput = {
 export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string;
 };
+export type UserCreateNestedOneWithoutTemplateUnlocksInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutTemplateUnlocksInput, Prisma.UserUncheckedCreateWithoutTemplateUnlocksInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutTemplateUnlocksInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutTemplateUnlocksNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutTemplateUnlocksInput, Prisma.UserUncheckedCreateWithoutTemplateUnlocksInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutTemplateUnlocksInput;
+    upsert?: Prisma.UserUpsertWithoutTemplateUnlocksInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTemplateUnlocksInput, Prisma.UserUpdateWithoutTemplateUnlocksInput>, Prisma.UserUncheckedUpdateWithoutTemplateUnlocksInput>;
+};
 export type UserCreateNestedOneWithoutResumesInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutResumesInput, Prisma.UserUncheckedCreateWithoutResumesInput>;
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutResumesInput;
@@ -324,6 +343,67 @@ export type UserUpdateOneRequiredWithoutResumesNestedInput = {
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResumesInput, Prisma.UserUpdateWithoutResumesInput>, Prisma.UserUncheckedUpdateWithoutResumesInput>;
 };
+export type UserCreateWithoutTemplateUnlocksInput = {
+    id?: string;
+    name: string;
+    email: string;
+    password: string;
+    plan?: string;
+    stripeCustomerId?: string | null;
+    stripeSubscriptionId?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutTemplateUnlocksInput = {
+    id?: string;
+    name: string;
+    email: string;
+    password: string;
+    plan?: string;
+    stripeCustomerId?: string | null;
+    stripeSubscriptionId?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutTemplateUnlocksInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutTemplateUnlocksInput, Prisma.UserUncheckedCreateWithoutTemplateUnlocksInput>;
+};
+export type UserUpsertWithoutTemplateUnlocksInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutTemplateUnlocksInput, Prisma.UserUncheckedUpdateWithoutTemplateUnlocksInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutTemplateUnlocksInput, Prisma.UserUncheckedCreateWithoutTemplateUnlocksInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutTemplateUnlocksInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutTemplateUnlocksInput, Prisma.UserUncheckedUpdateWithoutTemplateUnlocksInput>;
+};
+export type UserUpdateWithoutTemplateUnlocksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.StringFieldUpdateOperationsInput | string;
+    plan?: Prisma.StringFieldUpdateOperationsInput | string;
+    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutTemplateUnlocksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.StringFieldUpdateOperationsInput | string;
+    plan?: Prisma.StringFieldUpdateOperationsInput | string;
+    stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput;
+};
 export type UserCreateWithoutResumesInput = {
     id?: string;
     name: string;
@@ -334,6 +414,7 @@ export type UserCreateWithoutResumesInput = {
     stripeSubscriptionId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    templateUnlocks?: Prisma.TemplateUnlockCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutResumesInput = {
     id?: string;
@@ -345,6 +426,7 @@ export type UserUncheckedCreateWithoutResumesInput = {
     stripeSubscriptionId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    templateUnlocks?: Prisma.TemplateUnlockUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutResumesInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -369,6 +451,7 @@ export type UserUpdateWithoutResumesInput = {
     stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    templateUnlocks?: Prisma.TemplateUnlockUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutResumesInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -380,18 +463,24 @@ export type UserUncheckedUpdateWithoutResumesInput = {
     stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    templateUnlocks?: Prisma.TemplateUnlockUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCountOutputType = {
     resumes: number;
+    templateUnlocks: number;
 };
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     resumes?: boolean | UserCountOutputTypeCountResumesArgs;
+    templateUnlocks?: boolean | UserCountOutputTypeCountTemplateUnlocksArgs;
 };
 export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null;
 };
 export type UserCountOutputTypeCountResumesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.ResumeWhereInput;
+};
+export type UserCountOutputTypeCountTemplateUnlocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.TemplateUnlockWhereInput;
 };
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -404,6 +493,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     createdAt?: boolean;
     updatedAt?: boolean;
     resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>;
+    templateUnlocks?: boolean | Prisma.User$templateUnlocksArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -442,6 +532,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "plan" | "stripeCustomerId" | "stripeSubscriptionId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>;
+    templateUnlocks?: boolean | Prisma.User$templateUnlocksArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -450,6 +541,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: "User";
     objects: {
         resumes: Prisma.$ResumePayload<ExtArgs>[];
+        templateUnlocks: Prisma.$TemplateUnlockPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -514,6 +606,7 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     resumes<T extends Prisma.User$resumesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    templateUnlocks<T extends Prisma.User$templateUnlocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$templateUnlocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TemplateUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -637,6 +730,17 @@ export type User$resumesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
     take?: number;
     skip?: number;
     distinct?: Prisma.ResumeScalarFieldEnum | Prisma.ResumeScalarFieldEnum[];
+};
+export type User$templateUnlocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.TemplateUnlockSelect<ExtArgs> | null;
+    omit?: Prisma.TemplateUnlockOmit<ExtArgs> | null;
+    include?: Prisma.TemplateUnlockInclude<ExtArgs> | null;
+    where?: Prisma.TemplateUnlockWhereInput;
+    orderBy?: Prisma.TemplateUnlockOrderByWithRelationInput | Prisma.TemplateUnlockOrderByWithRelationInput[];
+    cursor?: Prisma.TemplateUnlockWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.TemplateUnlockScalarFieldEnum | Prisma.TemplateUnlockScalarFieldEnum[];
 };
 export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.UserSelect<ExtArgs> | null;

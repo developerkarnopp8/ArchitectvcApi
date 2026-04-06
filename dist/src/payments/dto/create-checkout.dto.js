@@ -13,10 +13,16 @@ exports.CreateCheckoutDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateCheckoutDto {
     plan;
+    templateId;
 }
 exports.CreateCheckoutDto = CreateCheckoutDto;
 __decorate([
     (0, class_validator_1.IsIn)(['monthly', 'annual', 'single', 'test']),
     __metadata("design:type", String)
 ], CreateCheckoutDto.prototype, "plan", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "templateId", void 0);
 //# sourceMappingURL=create-checkout.dto.js.map

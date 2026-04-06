@@ -226,9 +226,6 @@ export type TemplateMinOrderByAggregateInput = {
     description?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
 };
-export type BoolFieldUpdateOperationsInput = {
-    set?: boolean;
-};
 export type TemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;

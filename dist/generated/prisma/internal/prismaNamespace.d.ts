@@ -510,8 +510,7 @@ export declare const UserScalarFieldEnum: {
     readonly email: "email";
     readonly password: "password";
     readonly plan: "plan";
-    readonly stripeCustomerId: "stripeCustomerId";
-    readonly stripeSubscriptionId: "stripeSubscriptionId";
+    readonly mpPaymentId: "mpPaymentId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };

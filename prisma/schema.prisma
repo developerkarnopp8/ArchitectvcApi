@@ -19,7 +19,20 @@ model User {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  resumes Resume[]
+  resumes          Resume[]
+  templateUnlocks  TemplateUnlock[]
+}
+
+model TemplateUnlock {
+  id         String   @id @default(cuid())
+  templateId String
+  downloaded Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, templateId])
 }
 
 model Resume {

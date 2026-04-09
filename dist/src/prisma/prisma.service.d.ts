@@ -11,6 +11,9 @@ export declare class PrismaService implements OnModuleInit, OnModuleDestroy {
     get template(): import("../../generated/prisma/models").TemplateDelegate<import("@prisma/client/runtime/client").DefaultArgs, {
         omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
     }>;
+    get templateUnlock(): import("../../generated/prisma/models").TemplateUnlockDelegate<import("@prisma/client/runtime/client").DefaultArgs, {
+        omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
+    }>;
     onModuleInit(): Promise<void>;
     onModuleDestroy(): Promise<void>;
 }

@@ -29,6 +29,31 @@ export declare class PaymentsController {
     }): Promise<{
         url: string | null;
     }>;
+    confirmSession(sessionId: string, req: Request & {
+        user: {
+            id: string;
+        };
+    }): Promise<{
+        confirmed: boolean;
+        plan?: undefined;
+        templateId?: undefined;
+    } | {
+        confirmed: boolean;
+        plan: string;
+        templateId: string;
+    }>;
+    getUnlockedTemplates(req: Request & {
+        user: {
+            id: string;
+        };
+    }): Promise<string[]>;
+    consumeUnlock(templateId: string, req: Request & {
+        user: {
+            id: string;
+        };
+    }): Promise<{
+        consumed: boolean;
+    }>;
     webhook(sig: string, req: RawBodyRequest<Request>): Promise<{
         received: boolean;
     }>;

@@ -18,6 +18,9 @@ export declare class AuthService {
     }>;
     login(dto: LoginDto): Promise<{
         user: {
+            id: string;
+            email: string;
+            stripeCustomerId: string | null;
             name: string;
             email: string;
             id: string;

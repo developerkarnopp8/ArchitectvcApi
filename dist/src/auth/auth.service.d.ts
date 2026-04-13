@@ -8,9 +8,9 @@ export declare class AuthService {
     constructor(prisma: PrismaService, jwt: JwtService);
     register(dto: RegisterDto): Promise<{
         user: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             plan: string;
             createdAt: Date;
         };
@@ -18,11 +18,12 @@ export declare class AuthService {
     }>;
     login(dto: LoginDto): Promise<{
         user: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
+            stripeCustomerId: string | null;
             plan: string;
-            mpPaymentId: string | null;
+            stripeSubscriptionId: string | null;
             createdAt: Date;
             updatedAt: Date;
         };

@@ -6,12 +6,20 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   // CORS — permite chamadas do Angular (dev + prod)
+  const allowedOrigins = [
+    /^http:\/\/localhost:\d+$/,           // qualquer porta localhost
+    process.env.FRONTEND_URL,             // domínio principal de produção
+    process.env.FRONTEND_URL_WWW,         // www do domínio (opcional)
+  ].filter(Boolean);
+
   app.enableCors({
-    origin: [
-      'http://localhost:4200',
-      'http://localhost:4201',
-      process.env.FRONTEND_URL,
-    ].filter(Boolean) as string[],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // server-to-server
+      const allowed = allowedOrigins.some(o =>
+        o instanceof RegExp ? o.test(origin) : o === origin
+      );
+      callback(allowed ? null : new Error('Not allowed by CORS'), allowed);
+    },
     credentials: true,
   });
 

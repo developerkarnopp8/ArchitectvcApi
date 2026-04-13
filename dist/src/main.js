@@ -5,12 +5,18 @@ const common_1 = require("@nestjs/common");
 const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, { rawBody: true });
+    const allowedOrigins = [
+        /^http:\/\/localhost:\d+$/,
+        process.env.FRONTEND_URL,
+        process.env.FRONTEND_URL_WWW,
+    ].filter(Boolean);
     app.enableCors({
-        origin: [
-            'http://localhost:4200',
-            'http://localhost:4201',
-            process.env.FRONTEND_URL,
-        ].filter(Boolean),
+        origin: (origin, callback) => {
+            if (!origin)
+                return callback(null, true);
+            const allowed = allowedOrigins.some(o => o instanceof RegExp ? o.test(origin) : o === origin);
+            callback(allowed ? null : new Error('Not allowed by CORS'), allowed);
+        },
         credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({

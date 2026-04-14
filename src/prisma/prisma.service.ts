@@ -15,6 +15,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   get resume() { return this.client.resume; }
   get template() { return this.client.template; }
   get templateUnlock() { return this.client.templateUnlock; }
+  get passwordResetToken() { return this.client.passwordResetToken; }
 
   async onModuleInit() {
     await this.client.$connect();

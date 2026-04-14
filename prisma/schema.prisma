@@ -19,8 +19,9 @@ model User {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  resumes          Resume[]
-  templateUnlocks  TemplateUnlock[]
+  resumes             Resume[]
+  templateUnlocks     TemplateUnlock[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model TemplateUnlock {
@@ -43,6 +44,17 @@ model Resume {
   status     String   @default("draft") // "draft" | "complete"
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

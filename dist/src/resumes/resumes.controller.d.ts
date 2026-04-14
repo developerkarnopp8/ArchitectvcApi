@@ -17,39 +17,39 @@ export declare class ResumesController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
         templateId: string;
+        title: string;
         status: string;
     }[]>;
     findOne(id: string, req: AuthRequest): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     create(dto: CreateResumeDto, req: AuthRequest): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     update(id: string, dto: UpdateResumeDto, req: AuthRequest): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     remove(id: string, req: AuthRequest): Promise<{
         message: string;

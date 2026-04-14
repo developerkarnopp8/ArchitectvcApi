@@ -14,6 +14,7 @@ export declare const ModelName: {
     readonly User: "User";
     readonly TemplateUnlock: "TemplateUnlock";
     readonly Resume: "Resume";
+    readonly PasswordResetToken: "PasswordResetToken";
     readonly Template: "Template";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -55,6 +56,15 @@ export declare const ResumeScalarFieldEnum: {
     readonly userId: "userId";
 };
 export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum];
+export declare const PasswordResetTokenScalarFieldEnum: {
+    readonly id: "id";
+    readonly token: "token";
+    readonly expiresAt: "expiresAt";
+    readonly used: "used";
+    readonly createdAt: "createdAt";
+    readonly userId: "userId";
+};
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum];
 export declare const TemplateScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";

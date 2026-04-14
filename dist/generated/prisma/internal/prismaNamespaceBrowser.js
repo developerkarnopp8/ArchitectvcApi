@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.JsonNullValueInput = exports.SortOrder = exports.TemplateScalarFieldEnum = exports.ResumeScalarFieldEnum = exports.TemplateUnlockScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.JsonNullValueInput = exports.SortOrder = exports.TemplateScalarFieldEnum = exports.PasswordResetTokenScalarFieldEnum = exports.ResumeScalarFieldEnum = exports.TemplateUnlockScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -48,6 +48,7 @@ exports.ModelName = {
     User: 'User',
     TemplateUnlock: 'TemplateUnlock',
     Resume: 'Resume',
+    PasswordResetToken: 'PasswordResetToken',
     Template: 'Template'
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
@@ -82,6 +83,14 @@ exports.ResumeScalarFieldEnum = {
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    userId: 'userId'
+};
+exports.PasswordResetTokenScalarFieldEnum = {
+    id: 'id',
+    token: 'token',
+    expiresAt: 'expiresAt',
+    used: 'used',
+    createdAt: 'createdAt',
     userId: 'userId'
 };
 exports.TemplateScalarFieldEnum = {

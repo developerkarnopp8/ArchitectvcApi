@@ -160,6 +160,7 @@ export declare const ModelName: {
     readonly User: "User";
     readonly TemplateUnlock: "TemplateUnlock";
     readonly Resume: "Resume";
+    readonly PasswordResetToken: "PasswordResetToken";
     readonly Template: "Template";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -173,7 +174,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "templateUnlock" | "resume" | "template";
+        modelProps: "user" | "templateUnlock" | "resume" | "passwordResetToken" | "template";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -399,6 +400,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        PasswordResetToken: {
+            payload: Prisma.$PasswordResetTokenPayload<ExtArgs>;
+            fields: Prisma.PasswordResetTokenFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.PasswordResetTokenFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.PasswordResetTokenFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                findFirst: {
+                    args: Prisma.PasswordResetTokenFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.PasswordResetTokenFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                findMany: {
+                    args: Prisma.PasswordResetTokenFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[];
+                };
+                create: {
+                    args: Prisma.PasswordResetTokenCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                createMany: {
+                    args: Prisma.PasswordResetTokenCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.PasswordResetTokenCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[];
+                };
+                delete: {
+                    args: Prisma.PasswordResetTokenDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                update: {
+                    args: Prisma.PasswordResetTokenUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.PasswordResetTokenDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.PasswordResetTokenUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.PasswordResetTokenUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[];
+                };
+                upsert: {
+                    args: Prisma.PasswordResetTokenUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>;
+                };
+                aggregate: {
+                    args: Prisma.PasswordResetTokenAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregatePasswordResetToken>;
+                };
+                groupBy: {
+                    args: Prisma.PasswordResetTokenGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.PasswordResetTokenCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number;
+                };
+            };
+        };
         Template: {
             payload: Prisma.$TemplatePayload<ExtArgs>;
             fields: Prisma.TemplateFieldRefs;
@@ -535,6 +610,15 @@ export declare const ResumeScalarFieldEnum: {
     readonly userId: "userId";
 };
 export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum];
+export declare const PasswordResetTokenScalarFieldEnum: {
+    readonly id: "id";
+    readonly token: "token";
+    readonly expiresAt: "expiresAt";
+    readonly used: "used";
+    readonly createdAt: "createdAt";
+    readonly userId: "userId";
+};
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum];
 export declare const TemplateScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
@@ -605,6 +689,7 @@ export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
     templateUnlock?: Prisma.TemplateUnlockOmit;
     resume?: Prisma.ResumeOmit;
+    passwordResetToken?: Prisma.PasswordResetTokenOmit;
     template?: Prisma.TemplateOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';

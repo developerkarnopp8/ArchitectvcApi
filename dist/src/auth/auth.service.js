@@ -46,18 +46,20 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt = __importStar(require("bcrypt"));
+const crypto = __importStar(require("crypto"));
 const prisma_service_1 = require("../prisma/prisma.service");
+const email_service_1 = require("./email.service");
 let AuthService = class AuthService {
     prisma;
     jwt;
-    constructor(prisma, jwt) {
+    email;
+    constructor(prisma, jwt, email) {
         this.prisma = prisma;
         this.jwt = jwt;
+        this.email = email;
     }
     async register(dto) {
-        const exists = await this.prisma.user.findUnique({
-            where: { email: dto.email },
-        });
+        const exists = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (exists)
             throw new common_1.ConflictException('E-mail já cadastrado.');
         const hashed = await bcrypt.hash(dto.password, 10);
@@ -65,21 +67,53 @@ let AuthService = class AuthService {
             data: { name: dto.name, email: dto.email, password: hashed },
             select: { id: true, name: true, email: true, plan: true, createdAt: true },
         });
-        const token = this.signToken(user.id, user.email);
-        return { user, accessToken: token };
+        return { user, accessToken: this.signToken(user.id, user.email) };
     }
     async login(dto) {
-        const user = await this.prisma.user.findUnique({
-            where: { email: dto.email },
-        });
+        const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (!user)
             throw new common_1.UnauthorizedException('Credenciais inválidas.');
         const valid = await bcrypt.compare(dto.password, user.password);
         if (!valid)
             throw new common_1.UnauthorizedException('Credenciais inválidas.');
         const { password: _, ...safeUser } = user;
-        const token = this.signToken(user.id, user.email);
-        return { user: safeUser, accessToken: token };
+        return { user: safeUser, accessToken: this.signToken(user.id, user.email) };
+    }
+    async forgotPassword(dto) {
+        const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+        if (!user)
+            return { message: 'Se o e-mail estiver cadastrado, você receberá as instruções.' };
+        await this.prisma.passwordResetToken.updateMany({
+            where: { userId: user.id, used: false },
+            data: { used: true },
+        });
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+        await this.prisma.passwordResetToken.create({
+            data: { token, userId: user.id, expiresAt },
+        });
+        const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password?token=${token}`;
+        await this.email.sendPasswordReset(user.email, user.name, resetUrl);
+        return { message: 'Se o e-mail estiver cadastrado, você receberá as instruções.' };
+    }
+    async resetPassword(dto) {
+        const record = await this.prisma.passwordResetToken.findUnique({
+            where: { token: dto.token },
+            include: { user: true },
+        });
+        if (!record || record.used || record.expiresAt < new Date()) {
+            throw new common_1.BadRequestException('Token inválido ou expirado.');
+        }
+        const hashed = await bcrypt.hash(dto.password, 10);
+        await this.prisma.user.update({
+            where: { id: record.userId },
+            data: { password: hashed },
+        });
+        await this.prisma.passwordResetToken.update({
+            where: { id: record.id },
+            data: { used: true },
+        });
+        return { message: 'Senha redefinida com sucesso.' };
     }
     signToken(userId, email) {
         return this.jwt.sign({ sub: userId, email });
@@ -89,6 +123,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        email_service_1.EmailService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

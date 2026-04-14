@@ -8,39 +8,39 @@ export declare class ResumesService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
         templateId: string;
+        title: string;
         status: string;
     }[]>;
     findOne(id: string, userId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     create(userId: string, dto: CreateResumeDto): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     update(id: string, userId: string, dto: UpdateResumeDto): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        data: import("@prisma/client/runtime/client").JsonValue;
-        title: string;
-        templateId: string;
-        status: string;
         userId: string;
+        templateId: string;
+        title: string;
+        data: import("@prisma/client/runtime/client").JsonValue;
+        status: string;
     }>;
     remove(id: string, userId: string): Promise<{
         message: string;
